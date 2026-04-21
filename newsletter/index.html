@@ -510,27 +510,40 @@
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const grid = document.getElementById('posts-grid');
-      const FEED_URL = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://gianninspire.substack.com/feed') + '&count=20';
+      const FEED = 'https://gianninspire.substack.com/feed';
+      const PROXY_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(FEED);
 
-      fetch(FEED_URL)
+      fetch(PROXY_URL)
         .then(function(res) {
           if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
-          return res.json();
+          return res.text();
         })
-        .then(function(data) {
-          if (!data.items || !data.items.length) throw new Error('No items found in feed');
-          const items = data.items;
+        .then(function(str) {
+          const parser = new DOMParser();
+          const xml = parser.parseFromString(str, 'application/xml');
+          const items = Array.from(xml.querySelectorAll('item'));
+          if (!items.length) throw new Error('No items found in feed');
           grid.innerHTML = '';
 
           items.forEach(function(item, index) {
-            const title    = item.title || '';
-            const link     = item.link  || '#';
-            const pubDate  = item.pubDate || '';
-            const cover    = item.thumbnail || item.enclosure?.link || null;
+            const title   = item.querySelector('title')?.textContent || '';
+            const link    = item.querySelector('link')?.nextSibling?.nodeValue?.trim()
+                            || item.querySelector('link')?.textContent || '#';
+            const pubDate = item.querySelector('pubDate')?.textContent || '';
 
-            // Strip HTML and truncate to 150 words
+            // Cover: try <media:content url="..."> then first <img> in description
+            const mediaEl = item.getElementsByTagNameNS('*', 'content')[0];
+            let cover = mediaEl ? mediaEl.getAttribute('url') : null;
+            if (!cover) {
+              const tempDiv = document.createElement('div');
+              tempDiv.innerHTML = item.querySelector('description')?.textContent || '';
+              const firstImg = tempDiv.querySelector('img');
+              cover = firstImg ? firstImg.src : null;
+            }
+
+            // Strip HTML, truncate 150 words
             const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = item.description || '';
+            tempDiv.innerHTML = item.querySelector('description')?.textContent || '';
             const plainText = (tempDiv.textContent || tempDiv.innerText || '')
               .replace(/\s+/g, ' ').trim();
             const words = plainText.split(' ');
@@ -542,16 +555,14 @@
               year: 'numeric', month: 'long', day: 'numeric'
             });
 
-            // Stagger delay
             const delay = Math.min(index, 5) * 0.08;
 
-            // Cover image or monogram placeholder
             const coverHTML = cover
               ? `<img src="${cover}" alt="${title}" loading="lazy">`
               : `<div class="cover-placeholder"><span>G</span></div>`;
 
             const cardHTML = `
-              <article class="post-card fade-in-section" style="transition-delay: ${delay}s">
+              <article class="post-card fade-in-section" style="transition-delay:${delay}s">
                 <a class="card-cover" href="${link}" target="_blank" rel="noopener">
                   ${coverHTML}
                 </a>
