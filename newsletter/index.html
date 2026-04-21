@@ -510,41 +510,27 @@
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const grid = document.getElementById('posts-grid');
-      const FEED_URL = 'https://gianninspire.substack.com/feed';
+      const FEED_URL = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent('https://gianninspire.substack.com/feed') + '&count=20';
 
       fetch(FEED_URL)
         .then(function(res) {
           if (!res.ok) throw new Error('Network response was not ok: ' + res.status);
-          return res.text();
+          return res.json();
         })
-        .then(function(str) {
-          const parser = new DOMParser();
-          const xml = parser.parseFromString(str, 'application/xml');
-          const items = Array.from(xml.querySelectorAll('item'));
-
-          if (!items.length) throw new Error('No items found in feed');
-
+        .then(function(data) {
+          if (!data.items || !data.items.length) throw new Error('No items found in feed');
+          const items = data.items;
           grid.innerHTML = '';
 
           items.forEach(function(item, index) {
-            const title = item.querySelector('title')?.textContent || '';
-            const link  = item.querySelector('link')?.textContent || '#';
-            const pubDate = item.querySelector('pubDate')?.textContent || '';
-            const rawDescription = item.querySelector('description')?.textContent || '';
-
-            // Extract cover image from <media:content> or first <img> in description
-            const mediaContent = item.getElementsByTagNameNS('*', 'content')[0];
-            let cover = mediaContent ? mediaContent.getAttribute('url') : null;
-            if (!cover) {
-              const tempDiv = document.createElement('div');
-              tempDiv.innerHTML = rawDescription;
-              const firstImg = tempDiv.querySelector('img');
-              cover = firstImg ? firstImg.getAttribute('src') : null;
-            }
+            const title    = item.title || '';
+            const link     = item.link  || '#';
+            const pubDate  = item.pubDate || '';
+            const cover    = item.thumbnail || item.enclosure?.link || null;
 
             // Strip HTML and truncate to 150 words
             const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = rawDescription;
+            tempDiv.innerHTML = item.description || '';
             const plainText = (tempDiv.textContent || tempDiv.innerText || '')
               .replace(/\s+/g, ' ').trim();
             const words = plainText.split(' ');
