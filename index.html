@@ -1013,6 +1013,152 @@
     }
     /* END NEWSLETTER SECTION */
 
+    /* ── Products Section ── */
+    .products {
+      padding: 120px 24px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+    .products-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    .products-heading {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      color: #f5f5f7;
+      margin: 12px 0 16px;
+      line-height: 1.1;
+    }
+    .products-sub {
+      font-size: 17px;
+      color: rgba(255,255,255,0.5);
+      max-width: 520px;
+      line-height: 1.6;
+      margin-bottom: 56px;
+    }
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) {
+      .products-grid { grid-template-columns: 1fr; max-width: 480px; }
+    }
+    .product-card {
+      background: #161616;
+      border-radius: 16px;
+      border: 1px solid transparent;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      cursor: pointer;
+    }
+    .product-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      border-color: rgba(255,255,255,0.08);
+    }
+    .product-card--coming-soon {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .product-card-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .product-card-image-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background: #0f0f0f;
+    }
+    .product-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .product-card:hover .product-card-img {
+      transform: scale(1.03);
+    }
+    .product-card-image-placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+    }
+    .coming-soon-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+    .coming-soon-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+    }
+    .product-card-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #0071e3;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 980px;
+    }
+    .product-card-badge--coming-soon {
+      background: rgba(30, 30, 30, 0.85);
+      color: rgba(255,255,255,0.5);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .product-card-body {
+      padding: 24px;
+    }
+    .product-type-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 10px;
+    }
+    .product-card-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #f5f5f7;
+      margin: 0 0 10px;
+      line-height: 1.25;
+    }
+    .product-card-desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .product-card-cta {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2997ff;
+      letter-spacing: -0.01em;
+    }
+    .product-card-cta--muted {
+      color: rgba(255,255,255,0.25);
+    }
+
     /* Footer socials */
     .footer-socials {
       display: flex;
@@ -1234,69 +1380,54 @@
   </section>
 
   <!-- FREE RESOURCES -->
-  <section class="resources fade-in-section" id="resources">
-    <div class="resources-inner">
-      <span class="pill">Start Here</span>
-      <h2 class="resources-headline">Start Here. It's Free.</h2>
-      <div class="resource-card">
-        <span class="resource-label">Notion Planner</span>
-        <h3 class="resource-name">Flow Focus Planner</h3>
-        <p style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #888888; line-height: 1.8; margin: 16px 0 0 0;">Stop planning for the sake of it. Start building days that actually move you forward.</p>
-        <ul style="list-style: none; padding: 0; margin: 16px 0 0 0; display: flex; flex-direction: column; gap: 10px;">
-          <li style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #888888; display: flex; align-items: flex-start; gap: 10px;"><span style="color: #00BFFF; font-weight: 700; flex-shrink: 0;">✓</span> Clarity on what actually matters — every morning</li>
-          <li style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #888888; display: flex; align-items: flex-start; gap: 10px;"><span style="color: #00BFFF; font-weight: 700; flex-shrink: 0;">✓</span> Watch your habits stack into something you're proud of</li>
-          <li style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #888888; display: flex; align-items: flex-start; gap: 10px;"><span style="color: #00BFFF; font-weight: 700; flex-shrink: 0;">✓</span> Review your week before it slips through your fingers</li>
-          <li style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: #888888; display: flex; align-items: flex-start; gap: 10px;"><span style="color: #00BFFF; font-weight: 700; flex-shrink: 0;">✓</span> Up and running in under 10 minutes</li>
-        </ul>
-        <img src="flow-focus-cover.png" alt="Flow Focus Planner cover" class="resource-cover">
-        <div class="resource-form">
-<form action="https://app.kit.com/forms/9290526/subscriptions" method="post" target="_self" style="width:100%;">
-  <input type="hidden" name="utf8" value="✓">
-  <div style="margin-bottom: 12px;">
-    <input
-      type="email"
-      name="email_address"
-      placeholder="Email Address"
-      required
-      style="
-        width: 100%;
-        background: #1a1a1c;
-        border: 1px solid rgba(255,255,255,0.12);
-        color: #ffffff;
-        border-radius: 8px;
-        padding: 12px 16px;
-        font-size: 15px;
-        font-family: inherit;
-        outline: none;
-        box-sizing: border-box;
-      "
-    >
-  </div>
-  <button
-    type="submit"
-    style="
-      width: 100%;
-      background: #0071e3;
-      color: #ffffff;
-      border: none;
-      border-radius: 980px;
-      padding: 12px 24px;
-      font-size: 15px;
-      font-family: inherit;
-      font-weight: 400;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    "
-    onmouseover="this.style.background='#0077ed'"
-    onmouseout="this.style.background='#0071e3'"
-  >Send It To Me</button>
-</form>
+<section class="products fade-in-section" id="resources">
+  <div class="products-inner">
+    <div class="section-label">FREE RESOURCES</div>
+    <h2 class="products-heading">Tools Built for the Work.</h2>
+    <p class="products-sub">Every resource is free. Every one has one job: make the next right action obvious.</p>
+    <div class="products-grid">
+      <div class="product-card">
+        <a href="/planner" class="product-card-link">
+          <div class="product-card-image-wrap">
+            <img src="flow-focus-thumbnail.png" alt="Flow Focus Planner" class="product-card-img" />
+            <div class="product-card-badge">FREE</div>
+          </div>
+          <div class="product-card-body">
+            <div class="product-type-label">NOTION TEMPLATE</div>
+            <h3 class="product-card-title">Flow Focus Planner</h3>
+            <p class="product-card-desc">The system that turns scattered days into focused execution. Daily planning, habit tracking, and weekly review — all in one place.</p>
+            <span class="product-card-cta">Get it free →</span>
+          </div>
+        </a>
+      </div>
+      <div class="product-card product-card--coming-soon">
+        <div class="product-card-image-wrap">
+          <img src="the-foundation-stack-thumbnail.png" alt="The Foundation Stack" class="product-card-img" />
+          <div class="product-card-badge product-card-badge--coming-soon">COMING SOON</div>
         </div>
-        <p class="resource-trust">Free. No spam. Unsubscribe anytime.</p>
-        <p class="resource-bridge">The planner structures your day. What it can't do is make you believe you're the type of person who actually shows up for it. That part comes next.</p>
+        <div class="product-card-body">
+          <div class="product-type-label">READING LIST</div>
+          <h3 class="product-card-title">The Foundation Stack</h3>
+          <p class="product-card-desc">Not summaries. Not a listicle. Three books — with the exact reason each one belongs in your hands right now.</p>
+          <span class="product-card-cta product-card-cta--muted">In progress</span>
+        </div>
+      </div>
+      <div class="product-card product-card--coming-soon">
+        <div class="product-card-image-wrap product-card-image-placeholder">
+          <div class="coming-soon-inner">
+            <span class="coming-soon-label">COMING SOON</span>
+          </div>
+        </div>
+        <div class="product-card-body">
+          <div class="product-type-label">AUDIT</div>
+          <h3 class="product-card-title">Identity Gap Audit</h3>
+          <p class="product-card-desc">Another tool is in the works. Follow along on X or Threads to be the first to know when it drops.</p>
+          <span class="product-card-cta product-card-cta--muted">In progress</span>
+        </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- NEWSLETTER -->
   <section class="newsletter fade-in-section" id="newsletter">
@@ -1431,10 +1562,12 @@
     updateTimers();
     setInterval(updateTimers, 1000);
 
-    // Avatar cards scroll to resources
-    document.querySelectorAll('.avatar-card').forEach(function(card) {
+    // Avatar cards scroll — Drifter + Builder → #resources, One in Progress → #newsletter
+    document.querySelectorAll('.avatar-card').forEach(function(card, index) {
+      const targetId = index === 2 ? 'newsletter' : 'resources';
+
       card.addEventListener('click', function() {
-        const target = document.getElementById('resources');
+        const target = document.getElementById(targetId);
         if (target) {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -1444,7 +1577,7 @@
       card.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          const target = document.getElementById('resources');
+          const target = document.getElementById(targetId);
           if (target) {
             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
