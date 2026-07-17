@@ -1063,6 +1063,31 @@
       box-shadow: none;
     }
 
+    .formkit-form[data-uid="0a0342150d"] .formkit-alert-error {
+      background: rgba(242, 100, 59, 0.1);
+      border: 1px solid #f2643b;
+      color: #ff8a65;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      margin: 0 0 8px 0;
+    }
+    .formkit-form[data-uid="0a0342150d"] .formkit-alert-error:empty {
+      display: none;
+    }
+    .formkit-form[data-uid="0a0342150d"] .formkit-alert-success {
+      background: #1a1a1c;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.75);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .formkit-form[data-uid="0a0342150d"] .formkit-powered-by-convertkit-container {
+      display: none;
+    }
+
     /* Footer socials */
     .footer-socials {
       display: flex;
@@ -1328,10 +1353,13 @@
           <div class="product-type-label">AUDIT</div>
           <h3 class="product-card-title">Identity Gap Audit</h3>
           <p class="product-card-desc">Another tool is in the works.</p>
-          <form action="https://app.kit.com/forms/9290526/subscriptions" method="post" target="_self" class="product-card-miniform">
+          <script src="https://f.convertkit.com/ckjs/ck.5.js"></script>
+          <form action="https://app.kit.com/forms/9344807/subscriptions" class="product-card-miniform seva-form formkit-form" method="post" data-sv-form="9344807" data-uid="0a0342150d" data-format="inline" data-version="5" data-options="{&quot;settings&quot;:{&quot;after_subscribe&quot;:{&quot;action&quot;:&quot;message&quot;,&quot;success_message&quot;:&quot;You're on the list. I'll email you the moment the Identity Gap Audit is live. Check your inbox now — there's something to start with while you wait.&quot;,&quot;redirect_url&quot;:&quot;&quot;},&quot;analytics&quot;:{&quot;google&quot;:null,&quot;fathom&quot;:null,&quot;facebook&quot;:null,&quot;segment&quot;:null,&quot;pinterest&quot;:null,&quot;sparkloop&quot;:null,&quot;googletagmanager&quot;:null},&quot;modal&quot;:{&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15},&quot;powered_by&quot;:{&quot;show&quot;:true,&quot;url&quot;:&quot;https://kit.com/features/forms?utm_campaign=poweredby&amp;utm_content=form&amp;utm_medium=referral&amp;utm_source=dynamic&quot;},&quot;recaptcha&quot;:{&quot;enabled&quot;:false},&quot;return_visitor&quot;:{&quot;action&quot;:&quot;show&quot;,&quot;custom_content&quot;:&quot;&quot;},&quot;slide_in&quot;:{&quot;display_in&quot;:&quot;bottom_right&quot;,&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15},&quot;sticky_bar&quot;:{&quot;display_in&quot;:&quot;top&quot;,&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15}},&quot;version&quot;:&quot;5&quot;}" min-width="400 500 600 700 800">
+            <ul class="formkit-alert formkit-alert-error" data-element="errors" data-group="alert"></ul>
             <input type="hidden" name="utf8" value="✓">
-            <input type="email" name="email_address" placeholder="Email Address" required class="miniform-input">
-            <button type="submit" class="miniform-submit">Notify Me First</button>
+            <input class="miniform-input" name="email_address" aria-label="Email Address" placeholder="Email Address" required type="email">
+            <button type="submit" data-element="submit" class="miniform-submit"><span>Notify Me First</span></button>
+            <div class="formkit-powered-by-convertkit-container"><a href="https://kit.com/features/forms?utm_campaign=poweredby&amp;utm_content=form&amp;utm_medium=referral&amp;utm_source=dynamic" data-element="powered-by" class="formkit-powered-by-convertkit" data-variant="dark" target="_blank" rel="nofollow noopener">Built with Kit</a></div>
           </form>
         </div>
       </div>
