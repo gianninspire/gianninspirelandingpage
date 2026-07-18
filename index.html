@@ -1526,21 +1526,11 @@
     /* NEWSLETTER SECTION */
     (function() {
       var FEED_URL = 'https://gianninspire.substack.com/feed';
-      var API_URL = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(FEED_URL);
+      var RSS2JSON_URL = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(FEED_URL);
+      var ALLORIGINS_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(FEED_URL);
       var section = document.getElementById('newsletter');
       var container = document.getElementById('newsletter-cards');
       if (!section || !container) return;
-
-      function formatDate(dateStr) {
-        try {
-          var d = new Date(dateStr);
-          if (isNaN(d.getTime())) return '';
-          var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-          return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
-        } catch (e) {
-          return '';
-        }
-      }
 
       function stripHtml(html) {
         var tmp = document.createElement('div');
@@ -1563,21 +1553,62 @@
           .replace(/'/g, '&#39;');
       }
 
-      fetch(API_URL)
-        .then(function(res) {
-          if (!res.ok) throw new Error('Network response not ok');
-          return res.json();
-        })
-        .then(function(data) {
-          if (!data || data.status !== 'ok' || !data.items || !data.items.length) {
-            throw new Error('No items');
-          }
-          var items = data.items.slice(0, 3);
-          var html = items.map(function(item) {
-            var thumbnail = item.thumbnail || (item.enclosure && item.enclosure.link) || '';
+      function tryRss2Json() {
+        return fetch(RSS2JSON_URL)
+          .then(function(res) { if (!res.ok) throw new Error('rss2json failed'); return res.json(); })
+          .then(function(data) {
+            if (!data || data.status !== 'ok' || !data.items || !data.items.length) throw new Error('No items');
+            return data.items.map(function(item) {
+              return {
+                title: item.title,
+                link: item.link,
+                thumbnail: item.thumbnail || (item.enclosure && item.enclosure.link) || '',
+                description: item.description || item.content || ''
+              };
+            });
+          });
+      }
+
+      function tryAllOrigins() {
+        return fetch(ALLORIGINS_URL)
+          .then(function(res) { if (!res.ok) throw new Error('AllOrigins failed'); return res.text(); })
+          .then(function(xmlText) {
+            var xml = new DOMParser().parseFromString(xmlText, 'text/xml');
+            var entries = xml.querySelectorAll('item');
+            if (!entries.length) throw new Error('No items');
+            var items = [];
+            entries.forEach(function(entry) {
+              if (items.length >= 3) return;
+              var titleEl = entry.querySelector('title');
+              var linkEl = entry.querySelector('link');
+              var descEl = entry.querySelector('description');
+              var mediaThumb = entry.getElementsByTagName('media:content')[0];
+              items.push({
+                title: titleEl ? titleEl.textContent : '',
+                link: linkEl ? linkEl.textContent : '',
+                thumbnail: mediaThumb ? mediaThumb.getAttribute('url') : '',
+                description: descEl ? descEl.textContent : ''
+              });
+            });
+            return items;
+          });
+      }
+
+      function showFallback() {
+        container.innerHTML = '<a class="newsletter-card" href="https://gianninspire.substack.com" target="_blank" rel="noopener">' +
+          '<h3 class="post-title">Read the Latest on Substack</h3>' +
+          '<p class="post-excerpt">New essays on identity, discipline, and self-improvement — published weekly.</p>' +
+        '</a>';
+      }
+
+      tryRss2Json()
+        .catch(function() { return tryAllOrigins(); })
+        .then(function(items) {
+          var html = items.slice(0, 3).map(function(item) {
+            var thumbnail = item.thumbnail || '';
             var title = escapeHtml(item.title || 'Untitled');
-            var excerpt = escapeHtml(truncate(stripHtml(item.description || item.content || ''), 100));
-            var link = escapeHtml(item.link || '#');
+            var excerpt = escapeHtml(truncate(stripHtml(item.description || ''), 100));
+            var link = escapeHtml(item.link || 'https://gianninspire.substack.com');
             return '<a class="newsletter-card" href="' + link + '" target="_blank" rel="noopener">' +
               (thumbnail ? '<img class="post-thumbnail" src="' + escapeHtml(thumbnail) + '" alt="' + title + '" loading="lazy">' : '') +
               '<h3 class="post-title">' + title + '</h3>' +
@@ -1587,7 +1618,7 @@
           container.innerHTML = html;
         })
         .catch(function() {
-          section.style.display = 'none';
+          showFallback();
         });
     })();
     /* END NEWSLETTER SECTION */
