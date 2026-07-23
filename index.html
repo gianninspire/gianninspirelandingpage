@@ -1569,10 +1569,12 @@
               var linkEl = entry.querySelector('link');
               var descEl = entry.querySelector('description');
               var mediaThumb = entry.getElementsByTagName('media:content')[0];
+              var enclosureEl = entry.querySelector('enclosure[type^="image"]');
+              var thumbnailUrl = mediaThumb ? mediaThumb.getAttribute('url') : (enclosureEl ? enclosureEl.getAttribute('url') : '');
               items.push({
                 title: titleEl ? titleEl.textContent : '',
                 link: linkEl ? linkEl.textContent : '',
-                thumbnail: mediaThumb ? mediaThumb.getAttribute('url') : '',
+                thumbnail: thumbnailUrl,
                 description: descEl ? descEl.textContent : ''
               });
             });
