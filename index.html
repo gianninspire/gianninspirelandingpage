@@ -1526,8 +1526,10 @@
     /* NEWSLETTER SECTION */
     (function() {
       var FEED_URL = 'https://gianninspire.substack.com/feed';
+      var WORKER_URL = 'https://gianninspire-feed.gianninspire.workers.dev';
       var RSS2JSON_URL = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(FEED_URL);
       var ALLORIGINS_URL = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(FEED_URL);
+      var CORSPROXY_URL = 'https://corsproxy.io/?url=' + encodeURIComponent(FEED_URL);
       var section = document.getElementById('newsletter');
       var container = document.getElementById('newsletter-cards');
       if (!section || !container) return;
@@ -1551,6 +1553,31 @@
           .replace(/>/g, '&gt;')
           .replace(/"/g, '&quot;')
           .replace(/'/g, '&#39;');
+      }
+
+      function tryWorker() {
+        return fetch(WORKER_URL)
+          .then(function(res) { if (!res.ok) throw new Error('Worker failed'); return res.text(); })
+          .then(function(xmlText) {
+            var xml = new DOMParser().parseFromString(xmlText, 'text/xml');
+            var entries = xml.querySelectorAll('item');
+            if (!entries.length) throw new Error('No items');
+            var items = [];
+            entries.forEach(function(entry) {
+              if (items.length >= 3) return;
+              var titleEl = entry.querySelector('title');
+              var linkEl = entry.querySelector('link');
+              var descEl = entry.querySelector('description');
+              var mediaThumb = entry.getElementsByTagName('media:content')[0];
+              items.push({
+                title: titleEl ? titleEl.textContent : '',
+                link: linkEl ? linkEl.textContent : '',
+                thumbnail: mediaThumb ? mediaThumb.getAttribute('url') : '',
+                description: descEl ? descEl.textContent : ''
+              });
+            });
+            return items;
+          });
       }
 
       function tryRss2Json() {
@@ -1594,6 +1621,31 @@
           });
       }
 
+      function tryCorsProxy() {
+        return fetch(CORSPROXY_URL)
+          .then(function(res) { if (!res.ok) throw new Error('CorsProxy failed'); return res.text(); })
+          .then(function(xmlText) {
+            var xml = new DOMParser().parseFromString(xmlText, 'text/xml');
+            var entries = xml.querySelectorAll('item');
+            if (!entries.length) throw new Error('No items');
+            var items = [];
+            entries.forEach(function(entry) {
+              if (items.length >= 3) return;
+              var titleEl = entry.querySelector('title');
+              var linkEl = entry.querySelector('link');
+              var descEl = entry.querySelector('description');
+              var mediaThumb = entry.getElementsByTagName('media:content')[0];
+              items.push({
+                title: titleEl ? titleEl.textContent : '',
+                link: linkEl ? linkEl.textContent : '',
+                thumbnail: mediaThumb ? mediaThumb.getAttribute('url') : '',
+                description: descEl ? descEl.textContent : ''
+              });
+            });
+            return items;
+          });
+      }
+
       function showFallback() {
         container.innerHTML = '<a class="newsletter-card" href="https://gianninspire.substack.com" target="_blank" rel="noopener">' +
           '<h3 class="post-title">Read the Latest on Substack</h3>' +
@@ -1601,8 +1653,10 @@
         '</a>';
       }
 
-      tryRss2Json()
+      tryWorker()
+        .catch(function() { return tryRss2Json(); })
         .catch(function() { return tryAllOrigins(); })
+        .catch(function() { return tryCorsProxy(); })
         .then(function(items) {
           var html = items.slice(0, 3).map(function(item) {
             var thumbnail = item.thumbnail || '';
